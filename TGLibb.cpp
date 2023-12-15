@@ -390,7 +390,7 @@ void arrayInversamenteOrdenado(int arr[], int size){
 int main(){
     srand(time(0));
     
-    int sizearr = 22500;
+    int sizearr;
     int input=0;
     string strinput;
     bool loop=true;
@@ -427,7 +427,7 @@ int main(){
         }
         if (input == 4){
             loop = false;
-            cout << "chao" << endl;
+            cout << "Cerrando programa..." << endl;
         }
     }while(loop);
 
