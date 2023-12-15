@@ -390,8 +390,7 @@ void arrayInversamenteOrdenado(int arr[], int size){
 int main(){
     srand(time(0));
     
-    //int arreglo[22500];
-    int sizearr = rand()%(110000 - 100000 + 1) + 100000;
+    int sizearr = 22500;
     int input=0;
     string strinput;
     bool loop=true;
