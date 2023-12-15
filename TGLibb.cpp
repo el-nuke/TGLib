@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <chrono>
 
 using namespace std;
@@ -160,37 +161,51 @@ int* mergeSort(int arr[], int left, int right) {
     }
 }
 
-int partition(int inArray[], int low, int high){
-    int i = low-1;
-    int pivot = inArray[high];
+int getRandomPivot(int low, int high) {
+    return rand() % (high - low + 1) + low;
+}
 
-    for (int j=low; j < high; j++){
-        if (inArray[j] <= pivot){
+int partition(int inArray[], int low, int high) {
+    int pivotIndex = getRandomPivot(low, high);
+    int temp = inArray[pivotIndex];
+    inArray[pivotIndex] = inArray[high];
+    inArray[high] = temp;
+
+    int pivot = inArray[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (inArray[j] <= pivot) {
             i++;
-            int temp = inArray[i];
+            temp = inArray[i];
             inArray[i] = inArray[j];
             inArray[j] = temp;
         }
     }
 
-    int temp = inArray[i+1];
-    inArray[i+1] = inArray[high];
+    temp = inArray[i + 1];
+    inArray[i + 1] = inArray[high];
     inArray[high] = temp;
 
-    return i+1;
+    return i + 1;
 }
 
 //Elige un pivote y lo mueve al final, luego busca el primer valor desde el principio mayor al pivote, y el primer valor menor desde el final (excluyendo el pivote)
 //Una vez ordenados, se elige otro pivote y se repite el proceso
+//Para evitar stack overflows, cambia a insertion para arreglos pequeños.
 //- quickSort(array, 0, size-1)
-void quickSort(int inArray[], int low, int high){
-    if (low < high){
-        //divide el array y obtiene un pivote
-        int pivot_index = partition(inArray, low, high);
+void quickSort(int inArray[], int low, int high) {
+    const int INSERTION_THRESHOLD = 10;
 
-        //ordena recursivamente los subarreglos de antes y despues del pivote
-        quickSort(inArray, low, pivot_index-1);
-        quickSort(inArray, pivot_index+1, high);
+    if (low < high) {
+        if (high - low + 1 <= INSERTION_THRESHOLD) {
+            inArray = insertionSort(inArray + low, high - low + 1);
+        } else {
+            int pivotIndex = partition(inArray, low, high);
+
+            quickSort(inArray, low, pivotIndex - 1);
+            quickSort(inArray, pivotIndex + 1, high);
+        }
     }
 }
 
@@ -248,7 +263,7 @@ void carrera(int inArray[], int inSize){
         auto tStart = chrono::high_resolution_clock::now();
         auto tStop = chrono::high_resolution_clock::now();
         
-        
+        //printArray(array, size);
         switch (c)
         {
         case 0:
@@ -317,36 +332,109 @@ void carrera(int inArray[], int inSize){
         default:
             break;
         }
-        printArray(array, size);
+        //printArray(array, size);
     }
     
     
     res->printAll();
 }
 
-int main(){
-    srand(time(0));
-
-    //int size = rand()%(110000 - 100000 + 1) + 100000;
-    int size = 10;
-    int arreglo[size];
-
-   //Llena el array ordenado
+void vaciarArray(int arr[], int size){
     for (int i=0; i<size; i++){
-        arreglo[i] = i+100;
+        arr[i] = 0;
+    }
+}
+
+void arrayAleatorio(int arr[], int size){
+    //Llena el array ordenado
+    for (int i=0; i<size; i++){
+        arr[i] = i;
     }
     //Reordena aleatoriamente n veces
-    for (int i=0; i<10000; i++){
+    for (int i=0; i<(size/2); i++){
         int x = rand()%size;
         int y = rand()%size;
-        int temp = arreglo[x];
-        arreglo[x] = arreglo[y];
-        arreglo[y] = temp;  
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;  
     }
+}
 
-    carrera(arreglo, size);
+void arrayAleatorioConDuplicados(int arr[], int size){
+    for (int i=0; i<size; i++){
+        arr[i] = arr[rand()%size] = rand()%100;
+    }
+}
 
-    //tiempos->printAll();
+void arrayOrdenado(int arr[], int size){
+    //Llena el array ordenado
+    for (int i=0; i<size; i++){
+        arr[i] = i;
+    }
+}
+
+void arrayInversamenteOrdenado(int arr[], int size){
+    //Llena el array ordenado
+    for (int i=0; i<size; i++){
+        arr[i] = size - i;
+    }
+}
+
+int main(){
+    srand(time(0));
+    
+    int arreglo[22500];
+    int sizearr = rand()%(110000 - 100000 + 1) + 100000;
+    int input=0;
+    string strinput;
+    bool loop=true;
+
+    do{
+        sizearr=0;
+        input=0;
+        cout << "-- Comparar algoritmos usando: -- " << endl;
+        cout << "1: Colas de espera" << endl;
+        cout << "2: Trazabilidad de objetos" << endl;
+        cout << "3: Eventos de cada escenario:" << endl;
+        cout << "4: Ninguno (Salir)" << endl;
+
+        cin >> strinput;
+        int input = stoi(strinput);
+
+        switch (input)
+        {
+        case 1:
+            cout << "cambiado size" << endl; 
+            sizearr = 0 + rand()%10000; 
+            cout << "llamada a llenar array" << endl; 
+            arrayAleatorioConDuplicados(arreglo,sizearr);  
+            cout << "llamada a carrera" << endl; 
+            carrera(arreglo, sizearr); 
+            break;
+
+        case 2:
+            sizearr = (1000 + rand()%500) * 15;
+            arrayAleatorioConDuplicados(arreglo,sizearr);
+            carrera(arreglo, sizearr);
+            
+            break;
+
+        case 3:
+            sizearr = 60000 + rand()%20000;
+            arrayInversamenteOrdenado(arreglo,sizearr);
+            carrera(arreglo, sizearr);
+            
+            break;
+
+        case 4:
+            loop = false;
+            cout << "chao" << endl;
+            break;
+
+        default:
+            break;
+        }
+    }while(loop);
 
     return 0;
 }
