@@ -383,7 +383,7 @@ void arrayInversamenteOrdenado(int arr[], int size){
 int main(){
     srand(time(0));
     
-    int arreglo[22500];
+    //int arreglo[22500];
     int sizearr = rand()%(110000 - 100000 + 1) + 100000;
     int input=0;
     string strinput;
@@ -401,38 +401,27 @@ int main(){
         cin >> strinput;
         int input = stoi(strinput);
 
-        switch (input)
-        {
-        case 1:
-            cout << "cambiado size" << endl; 
-            sizearr = 0 + rand()%10000; 
-            cout << "llamada a llenar array" << endl; 
+        if (input == 1){
+            sizearr = 100000 + rand()%10000;
+            int arreglo[sizearr];
             arrayAleatorioConDuplicados(arreglo,sizearr);  
-            cout << "llamada a carrera" << endl; 
             carrera(arreglo, sizearr); 
-            break;
-
-        case 2:
+        }
+        if (input == 2){
             sizearr = (1000 + rand()%500) * 15;
+            int arreglo[sizearr];
             arrayAleatorioConDuplicados(arreglo,sizearr);
             carrera(arreglo, sizearr);
-            
-            break;
-
-        case 3:
+        }
+        if (input == 3){
             sizearr = 60000 + rand()%20000;
+            int arreglo[sizearr];
             arrayInversamenteOrdenado(arreglo,sizearr);
             carrera(arreglo, sizearr);
-            
-            break;
-
-        case 4:
+        }
+        if (input == 4){
             loop = false;
             cout << "chao" << endl;
-            break;
-
-        default:
-            break;
         }
     }while(loop);
 
