@@ -7,6 +7,7 @@ using namespace std;
 struct resultados
 {
     string tipodecarrera;
+    int sizearreglo;
     chrono::microseconds selection, bubble, insertion, shell, merge, quick, heap;
     bool selectionW, bubbleW, insertionW, shellW, mergeW, quickW, heapW;
 
@@ -17,7 +18,7 @@ struct resultados
     }
 
     void printAll(){
-        cout << "\n-- RESULTADOS --" << endl;
+        cout << "\n-- Resultados de " << tipodecarrera << " (size: " << sizearreglo << ")" <<endl;
         cout << "Selection: " << selection.count() << " microsecs" << endl;
         cout << "Bubble: " << bubble.count() << " microsecs" << endl;
         cout << "Insertion: " << insertion.count() << " microsecs" << endl;
@@ -89,8 +90,8 @@ int* insertionSort(int inArray[], int size){
     return inArray;
 }
 
-//Similar a insertion, pero empieza usando un gap de n, con el cual compara y ordena valores adyacentes en n espacios, el gap se 
-//reduce con cada iteración hasta 1, donde itera por una ultima vez de forma idéntica a insertion.
+//Similar a Insertion, que compara e intercambia elementos distantes en lugar de elementos directamente adyacentes. 
+//El gap se reduce con cada iteración hasta 1, donde itera por una ultima vez de forma idéntica a insertion.
 //- *sortedarray = shellSort(array, size)
 int* shellSort(int inArray[], int size){
     for (int gap = size/2; gap>0; gap/=2){
@@ -190,9 +191,9 @@ int partition(int inArray[], int low, int high) {
     return i + 1;
 }
 
-//Elige un pivote y lo mueve al final, luego busca el primer valor desde el principio mayor al pivote, y el primer valor menor desde el final (excluyendo el pivote)
+//Elige un elemento pivote de la lista y particiona la lista en dos subconjuntos: elementos menores que el pivote y elementos mayores que el pivote.
 //Una vez ordenados, se elige otro pivote y se repite el proceso
-//Para evitar stack overflows, cambia a insertion para arreglos pequeños.
+//Para evitar stack overflows, cambia a insertion para los subarreglos mas pequeños.
 //- quickSort(array, 0, size-1)
 void quickSort(int inArray[], int low, int high) {
     const int INSERTION_THRESHOLD = 10;
@@ -231,7 +232,8 @@ void heapify(int inArray[], int n, int i){
     }
 }
 
-//Usa logica de arboles binarios para reordenar arreglos
+//Convierte la lista en un arbole binario Heap y extrae repetidamente el valor mas alto
+//reconstruyendo el heap hasta ordenar el arreglo
 //- heapSort(array, size)
 void heapSort(int inArray[], int size){
     int s = size;
@@ -249,11 +251,16 @@ void heapSort(int inArray[], int size){
     }
 }
 
-void carrera(int inArray[], int inSize){
+void carrera(int inArray[], int inSize, string tipo){
     resultados *res = crearResultados();
     int size = inSize;
     int* sortedarray;
     int array[size];
+
+    res->tipodecarrera = tipo;
+    res->sizearreglo = size;
+
+    cout << "Iniciado " << res->tipodecarrera << " (size: " << res->sizearreglo << ")" << endl;
     
     for (int c=0; c<7; c++){
         for (int i=0; i<size; i++){
@@ -395,7 +402,7 @@ int main(){
         cout << "-- Comparar algoritmos usando: -- " << endl;
         cout << "1: Colas de espera" << endl;
         cout << "2: Trazabilidad de objetos" << endl;
-        cout << "3: Eventos de cada escenario:" << endl;
+        cout << "3: Eventos de cada escenario" << endl;
         cout << "4: Ninguno (Salir)" << endl;
 
         cin >> strinput;
@@ -405,19 +412,19 @@ int main(){
             sizearr = 100000 + rand()%10000;
             int arreglo[sizearr];
             arrayAleatorioConDuplicados(arreglo,sizearr);  
-            carrera(arreglo, sizearr); 
+            carrera(arreglo, sizearr, "Colas de espera"); 
         }
         if (input == 2){
             sizearr = (1000 + rand()%500) * 15;
             int arreglo[sizearr];
             arrayAleatorioConDuplicados(arreglo,sizearr);
-            carrera(arreglo, sizearr);
+            carrera(arreglo, sizearr, "Trazabilidad de objetos");
         }
         if (input == 3){
             sizearr = 60000 + rand()%20000;
             int arreglo[sizearr];
             arrayInversamenteOrdenado(arreglo,sizearr);
-            carrera(arreglo, sizearr);
+            carrera(arreglo, sizearr, "Eventos de cada escenario");
         }
         if (input == 4){
             loop = false;
