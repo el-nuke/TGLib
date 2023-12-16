@@ -8,3 +8,5 @@ También contiene entornos de prueba para comprobar la efectividad de estos algo
 Estos son Colas de espera, Trazabilidad de objetos y Eventos de cada escenario.
 
 Todo con un simple menú que inicializa comparaciones y entrega resultados en microsegundos.
+
+Video: https://www.youtube.com/watch?v=vsFoQf4CT88
